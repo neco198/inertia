@@ -1,4 +1,4 @@
-import { AxiosResponse, default as Axios } from 'axios'
+import {AxiosInstance, AxiosResponse, default as Axios} from 'axios'
 import debounce from './debounce'
 import {
   fireBeforeEvent,
@@ -34,6 +34,11 @@ import { hrefToUrl, mergeDataIntoQueryString, urlWithoutHash } from './url'
 
 const isServer = typeof window === 'undefined'
 
+const axiosInstance = Axios.create({})
+
+export function getAdapter():AxiosInstance {
+    return axiosInstance
+}
 export class Router {
   protected page!: Page
   protected resolveComponent!: PageResolver
@@ -340,7 +345,7 @@ export class Router {
     fireStartEvent(visit)
     onStart(visit)
 
-    Axios({
+    axiosInstance.request({
       method,
       url: urlWithoutHash(url).href,
       data: method === Method.GET ? {} : data,
